@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg2"
+   height="496.37994"
+   width="398.47861"
+   version="1.0">
+  <metadata
+     id="metadata2975">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <symbol
+       id="symbol-university"
+       viewBox="244.5 110 489 219.9">
+      <path
+         d="m 79,43 57,119 c 0,0 21,-96 104,-96 83,0 124,106 124,106 L 407,39 489,22 0,17 79,43 Z"
+         id="path4460" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:20"
+         d="M 94,176 73,215"
+         id="path4462" />
+      <path
+         d="M 300,19 C 300,29.5 277.4,38 249.5,38 221.6,38 199,29.5 199,19 199,8.5 221.6,0 249.5,0 277.4,0 300,8.5 300,19 Z"
+         id="path4464" />
+      <path
+         style="stroke:#000000;stroke-width:20"
+         ill="none"
+         d="M 112,216 96,178 64,88 C 64,88 55,80 60,53 65,26 76,29 76,29"
+         id="path4466" />
+    </symbol>
+    <marker
+       id="ArrowStart"
+       markerHeight="3"
+       markerUnits="strokeWidth"
+       markerWidth="4"
+       orient="auto"
+       refX="10"
+       refY="5"
+       viewBox="0 0 10 10">
+      <path
+         d="M 10,0 0,5 10,10 Z"
+         id="path3634" />
+    </marker>
+    <marker
+       id="ArrowEnd"
+       markerHeight="3"
+       markerUnits="strokeWidth"
+       markerWidth="4"
+       orient="auto"
+       refX="0"
+       refY="5"
+       viewBox="0 0 10 10">
+      <path
+         d="M 0,0 10,5 0,10 Z"
+         id="path3631" />
+    </marker>
+    <marker
+       id="marker2611"
+       markerHeight="3"
+       markerUnits="strokeWidth"
+       markerWidth="4"
+       orient="auto"
+       refX="10"
+       refY="5"
+       viewBox="0 0 10 10">
+      <path
+         d="M 10,0 0,5 10,10 Z"
+         id="path1325" />
+    </marker>
+    <marker
+       id="marker2608"
+       markerHeight="3"
+       markerUnits="strokeWidth"
+       markerWidth="4"
+       orient="auto"
+       refX="0"
+       refY="5"
+       viewBox="0 0 10 10">
+      <path
+         d="M 0,0 10,5 0,10 Z"
+         id="path1322" />
+    </marker>
+  </defs>
+  <path
+     d="M 345.06058,7.4151062 C 322.05217,-5.0774708 219.71096,-23.714072 89.922907,157.61297 -46.796012,348.62685 7.2027769,446.51127 29.080567,461.11542 L 117.80757,333.85421 c -17.75835,-12.38119 -7.84934,-34.20883 15.90864,-76.93274 15.72111,-28.26929 37.72191,-61.49201 63.83429,-91.55757 18.32399,-21.09423 38.07656,-40.38316 56.67419,-27.41682 L 345.06058,7.4151062 Z"
+     id="path1333"
+     style="fill:#231f20;fill-opacity:1;stroke:none" />
+  <path
+     d="m 74.707857,493.26001 c 8.22588,5.73512 18.79816,3.14662 24.03456,-4.36397 l 0.10036,-0.0179 c 0,0 69.094683,-99.2286 69.136573,-99.28868 5.48576,-7.86823 3.43393,-18.51705 -4.31508,-23.91969 L 127.61443,340.53568 38.658017,468.12593 c 0,0 35.92353,25.12823 35.97371,25.11927 l 0.0761,0.0148 z"
+     id="path1335"
+     style="fill:#231f20;fill-opacity:1;stroke:none" />
+  <path
+     d="m 300.12269,169.94734 c 8.22588,5.73511 18.79816,3.14661 24.03456,-4.36397 l 0.10036,-0.0179 c 0,0 71.08957,-102.089873 71.13146,-102.149953 5.48576,-7.86823 3.43393,-18.51705 -4.31508,-23.919692 L 355.02415,14.361739 264.07285,144.81326 c 0,0 35.92353,25.12822 35.97371,25.11927 l 0.0761,0.0148 z"
+     id="path1337"
+     style="fill:#231f20;fill-opacity:1;stroke:none" />
+</svg>
