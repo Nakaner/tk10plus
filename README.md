@@ -16,12 +16,12 @@ Maperitive
 ==========
 Setup
 -----
-# Create a link from your Maperitive icons directory to tk10plus/icons/michreichert. On Linux/OS X run following command from the directory where Maperitive is installed:
+1. Create a link from your Maperitive icons directory to tk10plus/icons/michreichert. On Linux/OS X run following command from the directory where Maperitive is installed:
     cd icons && ln -s <path to tk10plus repository>/icons/michreichert michreichert
-# In Maperitive: 
+2. In Maperitive: 
     use-ruleset location=<path to tk10plus repository>/tk10plus/tk10better.mrules as-alias=tk10better
-# In Maperitive: Map -> Switch to Rules -> tk10better
-# Load Conture Lines: Tools -> Generate Relief Contures
+3. In Maperitive: Map -> Switch to Rules -> tk10better
+4. Load Conture Lines: Tools -> Generate Relief Contures
 
 
 Mapserver
