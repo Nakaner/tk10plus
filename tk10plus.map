@@ -1,0 +1,468 @@
+# Mapfile for WMS service of TK10plus
+
+# freeTK10 – Maperitive implementation of the style of German 
+# "Topographische Karte 1:10.000 (TK10)" – English: topographical map 1:10,000
+# 
+# Author: Michael Reichert <nakaner [at) gmx.net>
+# 
+# following the rules for the TK10
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_2000.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_3000_teil1.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_3000_teil2.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_4000.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_5000.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_6000.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_7000.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_8000.pdf
+# http://www.lvermgeo.sachsen-anhalt.de/de/geoservice/download/veroeffentlichungen/files/sk10_allgemeine_vorbemerkungen.pdf
+# and
+# http://www.adv-online.de/Publications/Geotopography/binarywriterservlet?imgUid=7be60489-30c5-9a31-41e7-d734072e13d6&uBasVariant=11111111-1111-1111-1111-111111111111
+# (page 14-15)
+# 
+# Copyright (c) Michael Reichert, 2015
+# 
+# LICENSE (MIT)
+# =============
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+
+MAP
+  CONFIG "MS_ERRORFILE" stderr
+  DEBUG 2
+  NAME           "TK10plus"
+  IMAGETYPE      PNG
+  EXTENT         829661.671210184 6124187.10361856 1094324.26147206 6441932.03508405
+  SIZE           1920 1080 
+#  SHAPEPATH      "/var/geodata"
+  IMAGECOLOR     "#fffee6"
+  TRANSPARENT    OFF
+  FONTSET        "/var/geodata/mapserver-fontsets"
+
+  PROJECTION
+    "init=epsg:3857"
+  END
+
+  WEB
+    METADATA
+      "wms_title"           "TK10plus"
+      "wms_onlineresource"  "http://michreichert.de/tk10plus?"
+      "wms_srs"             "EPSG:3857"
+      "wms_enable_request"  "GetMap GetCapabilities"
+    END
+    TEMPPATH "/tmp/mapserver"
+  END
+
+  OUTPUTFORMAT
+    NAME "cairopng"
+    DRIVER AGG/PNG # only AGG supports halos
+    MIMETYPE "image/png"
+    IMAGEMODE RGBA
+    EXTENSION "png"
+    TRANSPARENT ON
+  END
+
+  SYMBOL
+    NAME "simplecircle"
+    TYPE ellipse
+    FILLED true
+    POINTS
+      1 1
+    END
+  END
+
+
+
+  # Start of LAYER DEFINITIONS ---------------------------------------------
+  LAYER # 
+    NAME         highway_labels
+    STATUS       ON
+    TYPE         LINE
+    METADATA
+      wms_title "Highways Labels"
+      wms_srs   "EPSG:3857"
+      wms_attribution_title "Data (c) OpenStreetMap contributors, ODbL, https://osm.org/copyright"
+    END
+
+    CONNECTIONTYPE postgis
+    CONNECTION "host=127.0.0.1 port=5432 dbname=osm user=osm password=osm"
+    DATA "geometry from (select geometry,id,type,name from osm_roads where type!~'(rail|light_rail|tram|disused|subway|abandoned|construction|monorail)') as foo using unique id using srid=3857" 
+
+    CLASSITEM    "type"  # "highway" if osm2pgsql
+    LABELITEM    "name"
+    CLASS
+      NAME       "highway-label"
+      TEXT       '[name]'
+      LABEL
+        COLOR 0 0 0
+        ANGLE FOLLOW
+        FONT LiberationSans
+        TYPE truetype
+        OFFSET 0 0  
+        POSITION cc 
+        SIZE 7
+        BUFFER 8
+        OUTLINEWIDTH 1.2
+        OUTLINECOLOR 255 255 255
+      END
+    END
+  END 
+
+  LAYER # 
+    NAME         highways
+    STATUS       ON
+    TYPE         LINE
+    METADATA
+      wms_title "Highways"
+      wms_srs   "EPSG:3857"
+      wms_attribution_title "Data (c) OpenStreetMap contributors, ODbL, https://osm.org/copyright"
+    END
+    SIZEUNITS meters
+
+    CONNECTIONTYPE postgis
+    CONNECTION "host=127.0.0.1 port=5432 dbname=osm user=osm password=osm"
+    DATA "geometry from (select geometry,id,type from osm_roads) as foo using unique id using srid=3857" 
+    # "where area!=1" ist nicht nötig, da die Tabelle nur LineStrings enthält und imposm das schon wegsortiert hat
+
+    CLASSITEM    "type"  # "highway" if osm2pgsql
+    CLASS
+      NAME       "highway-motorway"
+      EXPRESSION 'motorway'
+      STYLE
+        COLOR         "#ffb300"
+	WIDTH         10
+        OUTLINEWIDTH  1
+        OUTLINECOLOR  "#660000"
+      END
+    END
+    CLASS
+      NAME       "highway-motorway-link"
+      EXPRESSION 'motorway_link'
+      STYLE
+        COLOR         "#ffb300"
+	WIDTH         4
+        OUTLINEWIDTH  0.5
+        OUTLINECOLOR  "#660000"
+      END
+    END
+    CLASS
+      NAME       "highway-trunk"
+      EXPRESSION 'trunk'
+      STYLE
+        COLOR         "#ffb300"
+	WIDTH         8.5
+        OUTLINEWIDTH  1
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-trunk-link"
+      EXPRESSION 'trunk_link'
+      STYLE
+        COLOR         "#ffb300"
+	WIDTH         4
+        OUTLINEWIDTH  0.7
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-primary-link"
+      EXPRESSION 'primary_link'
+      STYLE
+        COLOR        "#fab20b"
+	WIDTH         6
+        OUTLINECOLOR "#712c31"
+        OUTLINEWIDTH  0.6
+      END
+    END
+    CLASS
+      NAME       "highway-primary"
+      EXPRESSION 'primary'
+      STYLE
+        COLOR        "#fab20b"
+	WIDTH         12
+        OUTLINECOLOR "#712c31"
+        OUTLINEWIDTH  1
+      END
+    END
+    CLASS
+      NAME       "highway-secondary-link"
+      EXPRESSION 'secondary_link'
+      STYLE
+        COLOR        "#fff200"
+	WIDTH         5
+        OUTLINEWIDTH  0.7
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-secondary"
+      EXPRESSION 'secondary'
+      STYLE
+        COLOR        "#fff200"
+	WIDTH         11
+        OUTLINEWIDTH  0.9
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-tertiary"
+      EXPRESSION 'tertiary'
+      STYLE
+        COLOR        255 255 255
+	WIDTH         9
+        OUTLINEWIDTH  1.2
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-residential"
+      EXPRESSION "residential"
+      STYLE
+        COLOR        255 255 255
+	WIDTH         9
+        OUTLINEWIDTH  0.4
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-unclassified"
+      EXPRESSION /unclassified/
+      STYLE
+        COLOR        255 255 255
+	WIDTH         7
+        OUTLINEWIDTH  0.8
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-living_street"
+      EXPRESSION "living_street"
+      STYLE
+        COLOR        255 255 255
+	WIDTH         4.5
+        OUTLINEWIDTH  0.3
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-pedestrian-way"
+      EXPRESSION 'pedestrian'
+      STYLE
+        COLOR         "#99ffb3"
+	WIDTH         6
+        OUTLINEWIDTH  0.6
+        OUTLINECOLOR  "#7f2c31"
+      END
+    END
+    CLASS
+      NAME       "highway-service"
+      EXPRESSION "service"
+      STYLE
+        COLOR        255 255 255
+	WIDTH         3.5
+        OUTLINEWIDTH  0.3
+        OUTLINECOLOR  "#712c31"
+      END
+    END
+    CLASS
+      NAME       "highway-track"
+      EXPRESSION "track"
+      STYLE
+        COLOR        "#7f2c31"
+	WIDTH         3
+      END
+    END
+    CLASS
+      NAME       "highway-path"
+      EXPRESSION /(path|cycleway|footway)/
+      STYLE
+        COLOR        "#7f2c31"
+	WIDTH         1.5
+        PATTERN       10 10 END
+      END
+    END
+    CLASS
+      NAME       "railway-rail"
+      EXPRESSION "rail"
+      STYLE
+        COLOR        "#000000"
+	WIDTH         3.5
+      END
+    END
+    CLASS
+      NAME       "railway-light-rail"
+      EXPRESSION /(light_rail|tram)/
+      STYLE
+        COLOR        "#000000"
+	WIDTH         1.2
+      END
+    END
+  END 
+
+  LAYER # 
+    NAME         building
+    STATUS       ON
+    TYPE         POLYGON
+    METADATA
+      wms_title "Buildings"
+      wms_srs   "EPSG:3857"
+      wms_attribution_title "Data (c) OpenStreetMap contributors, ODbL, https://osm.org/copyright"
+    END
+
+    CONNECTIONTYPE postgis
+    CONNECTION "host=127.0.0.1 port=5432 dbname=osm user=osm password=osm"
+    DATA "geometry from (select geometry,id,type,name from osm_buildings) as foo using unique id using srid=3857" 
+
+    CLASSITEM    "type"  # "building" if osm2pgsql
+    CLASS
+      NAME       "building"
+      EXPRESSION /.*/
+      STYLE
+        COLOR      "#666666"
+      END
+    END
+  END 
+
+  LAYER # 
+    NAME         waterareas
+    STATUS       ON
+    TYPE         POLYGON
+    METADATA
+      wms_title "Waterareas"
+      wms_srs   "EPSG:3857"
+      wms_attribution_title "Data (c) OpenStreetMap contributors, ODbL, https://osm.org/copyright"
+    END
+
+    CONNECTIONTYPE postgis
+    CONNECTION "host=127.0.0.1 port=5432 dbname=osm user=osm password=osm"
+    DATA "geometry from (select geometry,id,type,name from osm_waterareas) as foo using unique id using srid=3857" 
+
+    CLASSITEM    "type"  # "landuse" if osm2pgsql
+    CLASS
+      NAME       "riverbank-water"
+      EXPRESSION /(riverbank|water)/
+      STYLE
+        COLOR      "#bfeafb"
+        OUTLINECOLOR "#00adef"
+        OUTLINEWIDTH      1
+      END
+    END
+  END 
+
+  LAYER # 
+    NAME         waterways
+    STATUS       ON
+    TYPE         LINE
+    METADATA
+      wms_title "Waterways"
+      wms_srs   "EPSG:3857"
+      wms_attribution_title "Data (c) OpenStreetMap contributors, ODbL, https://osm.org/copyright"
+    END
+
+    CONNECTIONTYPE postgis
+    CONNECTION "host=127.0.0.1 port=5432 dbname=osm user=osm password=osm"
+    DATA "geometry from (select geometry,id,type,name from osm_waterways) as foo using unique id using srid=3857" 
+
+    CLASSITEM    "type"  # "waterway" if osm2pgsql
+    CLASS
+      NAME       "river"
+      EXPRESSION "river"
+      STYLE
+        COLOR      "#00adef"
+        WIDTH      4
+      END
+    END
+    CLASS
+      NAME       "stream"
+      EXPRESSION "stream"
+      STYLE
+        COLOR      "#00adef"
+        WIDTH      1
+      END
+    END
+  END 
+
+  LAYER # 
+    NAME         landuse-and-vegetation
+    STATUS       ON
+    TYPE         POLYGON
+    METADATA
+      wms_title "Landuse and Vegetation"
+      wms_srs   "EPSG:3857"
+      wms_attribution_title "Data (c) OpenStreetMap contributors, ODbL, https://osm.org/copyright"
+    END
+
+    CONNECTIONTYPE postgis
+    CONNECTION "host=127.0.0.1 port=5432 dbname=osm user=osm password=osm"
+    DATA "geometry from (select geometry,id,type,name from osm_landusages) as foo using unique id using srid=3857" 
+
+    CLASSITEM    "type"  # "landuse" if osm2pgsql
+    CLASS
+      NAME       "residential"
+      EXPRESSION /(residential|greenfield)/
+      COLOR      "#fbccd2"
+    END
+    CLASS
+      NAME       "commercial-industrial"
+      EXPRESSION /(commercial|industrial|retail|brownfield|construction|railway)/ # landfill missing in database
+      COLOR      "#cccccc"
+    END
+    CLASS
+      NAME       "forest"
+      EXPRESSION /(forest|wood)/
+      COLOR      "#bfdb85"
+    END
+    CLASS
+      NAME       "farm"
+      EXPRESSION /(farm|farmland|orchard)/
+      COLOR      "#fffee6"
+    END
+    CLASS
+      NAME       "fell"
+      EXPRESSION "fell"
+      COLOR      "#e6ffcc"
+    END
+    CLASS
+      NAME       "grass"
+      EXPRESSION /(grass|meadow)/
+      COLOR      "#e6f4cc"
+    END
+    CLASS
+      NAME       "green"
+      EXPRESSION /(allotments|park|garden|recreation_ground)/
+      COLOR      "#99dbb8"
+    END
+    CLASS
+      NAME       "graveyard"
+      EXPRESSION /(grave_yard|cemetery)/
+      COLOR      "#e6f4cc"
+    END
+    CLASS
+      NAME       "pitch"
+      EXPRESSION "pitch"
+      COLOR      "#99dbb8"
+    END
+    CLASS
+      NAME       "village_green"
+      EXPRESSION "village_green"
+      COLOR      "#99ffb3"
+    END
+  END 
+  # End of LAYER DEFINITIONS -------------------------------
+
+END
